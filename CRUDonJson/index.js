@@ -87,11 +87,7 @@ app.use((req,res)=>{
 })
 
 
-app.listen(port,(req,res)=>{
+app.listen(3000,(req,res)=>{
     console.log(`Server running on port: ${port}`);
 })
 
-
-app.listen(3030,(req,res)=>{
-    console.log("Server started")
-})
