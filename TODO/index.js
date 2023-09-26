@@ -16,23 +16,23 @@ const todoList = [
     {
         id: 1,
         title: 'Learn Node.js',
-        completed: "false"
+        completed: false
     },
     {
         id: 2,
         title: 'Learn Express',
-        completed: "false"
+        completed: false
     },
     {
         id: 3,
         title: 'Learn MongoDB',
-        completed: "false"
+        completed: false
     }
 ];
 
 //create a GET route to fetch all todos
 
-app.get('/todos', (req, res) => {
+app.get('/todo', (req, res) => {
     return res.send(todoList)
 });
 
@@ -51,14 +51,14 @@ app.get('/todo/:id',(req,res)=>{
 //create a POST route to add a new todo
 
 app.post('/todo',(req,res)=>{
-    let {title, completed} = req.body
-    if(!title || !completed){
-        return res.status(400).send("Enter both title and completed")
+    let {title} = req.body
+    if(!title){
+        return res.status(400).send("Enter title")
     }
     let todo = {
         id: todoList.length + 1,
         title,
-        completed
+        completed: false
     }
     todoList.push(todo)
     return res.send(todo)
@@ -66,16 +66,15 @@ app.post('/todo',(req,res)=>{
 
 //create a PUT route to update a todo
 
-app.put('/todo/id',(req,res)=>{
+app.put('/todo/:id',(req,res)=>{
     let id = req.params.id
-    let {title, completed} = req.body
-    if(!title || !completed){
-        return res.status(400).send("Enter both title and completed")
+    let {title} = req.body
+    if(!title){
+        return res.status(400).send("Enter title")
     }
     for(let i=0;i<todoList.length;i++){
         if(todoList[i].id==id){
             todoList[i].title = title
-            todoList[i].completed = completed
             return res.send(todoList[i])
         }
     }
@@ -88,8 +87,8 @@ app.delete('/todo/:id',(req,res)=>{
     let id = req.params.id
     for(let i=0;i<todoList.length;i++){
         if(todoList[i].id==id){
-            todoList.splice(i,1)
-            return res.send(todoList)
+            let deletedTodo = todoList.splice(i,1)
+            return res.send(deletedTodo)
         }
     }
     res.status(404).send(`No todo with id: ${id} is found`)
@@ -99,10 +98,9 @@ app.delete('/todo/:id',(req,res)=>{
 
 app.patch('/todo/:id',(req,res)=>{
     let id = req.params.id
-    let {completed} = req.body
     for(let i=0;i<todoList.length;i++){
         if(todoList[i].id==id){
-            todoList[i].completed=completed
+            todoList[i].completed=!todoList[i].completed
             return res.send(todoList[i])
         }
     }
